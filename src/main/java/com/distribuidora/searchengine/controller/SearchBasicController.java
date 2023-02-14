@@ -1,16 +1,30 @@
 package com.distribuidora.searchengine.controller;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.distribuidora.searchengine.dto.DenunciaDato;
+import com.distribuidora.searchengine.dto.Denunciagrilla;
+import com.distribuidora.searchengine.dto.Resugrilla;
+import com.distribuidora.searchengine.repository.DenunciaRepository;
+import com.distribuidora.searchengine.service.DenunciaService;
 
 @CrossOrigin("*")
 @RestController
@@ -22,6 +36,11 @@ public class SearchBasicController {
 		public Object execute() throws Exception;
 		
 	}
+	
+	
+	
+	@Autowired
+	DenunciaService denunciaService;
 	
 	public Map<String, Object> executeService(RestServiceExecution e) {
 		Map<String, Object> res = new HashMap<>();
@@ -45,7 +64,8 @@ public class SearchBasicController {
 		//		+ "FROM mpasis.prev_digital x "
 		//		+ "where x.idprev_digital IN (800, 801, 802,809,955,1001,1002,1799,1800,1801,1802,2145,2154,2155,2156,2157, 88710, 48301)";
 		
-		String sql = "SELECT x.nro_prev , x.prev_localidad , x.prev_fecha , x.prev_funcionariospol ,  x.relatos_hecho  FROM mpasis.prev_digital x where x.idprev_digital > 15000 and x.idprev_digital < 20000";
+		//String sql = "SELECT x.nro_prev , x.prev_localidad , x.prev_fecha , x.prev_funcionariospol ,  x.relatos_hecho  FROM mpasis.prev_digital x where x.idprev_digital > 15000 and x.idprev_digital < 20000";
+		String sql = "SELECT x.nro_prev , x.prev_localidad , x.prev_fecha , x.prev_funcionariospol ,  x.relatos_hecho  FROM mpasis.prev_digital x where x.idprev_digital > 105000 and x.idprev_digital < 106000";
 		return jdbcTemplate.queryForList(sql); 
 	}
 	
@@ -145,9 +165,11 @@ public class SearchBasicController {
 		});
 	}
 
+
+	// esto falta invocar desde el front ,  completar 
 	public List getTramiteExpe(String param1) {
 		String sql ="select idprev_digital_tramites , idprev_digital , asunto , fecha , texto "   
-                  + "from prev_digital_tramites pdt where idprev_digital " + param1;
+                  + "from prev_digital_tramites pdt where idprev_digital = " + param1;
 		return jdbcTemplate.queryForList(sql); 
 	}
 	
@@ -159,5 +181,76 @@ public class SearchBasicController {
 		});
 	}
 
+	public List getMesSecc(String param1) {
+		String sql ="SELECT pd.idprev_digital , pd.nro_prev , pd.fecha_hecho, pd.localidad_hecho\r\n"
+				+ "		   , me.caratula, ms.nombre , ms.regional  \r\n"
+				+ "	FROM prev_digital pd INNER JOIN mes_expedientes AS me\r\n"
+				+ "		ON pd.idprev_digital = me.idprev_digital \r\n"
+				+ "		INNER JOIN mes_seccionales ms ON me.idmes_seccionales = ms.idmes_seccionales \r\n"
+				+ "		WHERE pd.idprev_digital = " + param1;
+		return jdbcTemplate.queryForList(sql); 
+	}
+	
+	@GetMapping("/getmesexpe/{param1}")
+	public Map<String, Object> getMesSecc1(@PathVariable final String param1) {
+		return executeService(() -> {
+			return getMesSecc(param1);
+			
+		});
+	}
+	
+	
+	
+	@GetMapping("/llamaproce")
+	public ResponseEntity<List<Denunciagrilla>> lista(){
+		List<Denunciagrilla> lista = denunciaService.lista();
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+	
 
+	@GetMapping("/llamaproce1/{param1}")
+	public ResponseEntity<?> lista3(@PathVariable String param1) throws SQLException{
+		//List<Resugrilla> lista = denunciaService.listanew();
+		String dbURL = "jdbc:mysql://168.181.186.118:3306/mpasis";
+        String user = "dba";
+        String password = "55alfred55";
+		Connection conn  = DriverManager.getConnection(dbURL, user, password);
+		
+		CallableStatement statement = conn.prepareCall("{call pruebaSearch3(?)}");
+		statement.setString(1, param1);
+		boolean hadResults = statement.execute();
+		//ResultSet resultSet = statement.getResultSet();
+		System.out.println(hadResults);
+		List<DenunciaDato> lstdato = new ArrayList<>();
+		while (hadResults) {
+             ResultSet resultSet = statement.getResultSet();
+
+             // process result set
+             int i = 1 ;
+
+             while (resultSet.next()) {
+            	 DenunciaDato dato = new DenunciaDato();
+            	 dato.setId(resultSet.getInt("idprev_digital"));
+            	 dato.setNroprev(resultSet.getInt("nro_prev"));
+            	 dato.setFechahecho(resultSet.getString("fecha_hecho"));
+            	 dato.setDato(resultSet.getString("dato"));
+            	 lstdato.add(dato);
+            	 
+                 //String title = resultSet.getString("title");
+//                 String description = resultSet.getString("description");
+//                 int rating = resultSet.getInt("rating");
+         			//System.out.println( i + " " + resultSet.getString("dato" ));
+         			i++;
+//                 System.out.println(
+//                         "| " + title + " | " + description + " | " + rating + " |");
+             }
+
+             hadResults = statement.getMoreResults();
+         }
+
+		statement.close();
+		return new ResponseEntity<>(lstdato, HttpStatus.OK);
+	}
+
+	
 }

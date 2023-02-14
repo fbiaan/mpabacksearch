@@ -1,2 +1,7 @@
 C:\Users\PC\Documents\workspace-spring-tool-suite-4-4.12.0.RELEASE\MpaBackEnd\src\main\java\com\distribuidora\searchengine\MpaBackEndApplication.java
+C:\Users\PC\Documents\workspace-spring-tool-suite-4-4.12.0.RELEASE\MpaBackEnd\src\main\java\com\distribuidora\searchengine\service\DenunciaService.java
 C:\Users\PC\Documents\workspace-spring-tool-suite-4-4.12.0.RELEASE\MpaBackEnd\src\main\java\com\distribuidora\searchengine\controller\SearchBasicController.java
+C:\Users\PC\Documents\workspace-spring-tool-suite-4-4.12.0.RELEASE\MpaBackEnd\src\main\java\com\distribuidora\searchengine\dto\Resugrilla.java
+C:\Users\PC\Documents\workspace-spring-tool-suite-4-4.12.0.RELEASE\MpaBackEnd\src\main\java\com\distribuidora\searchengine\repository\DenunciaRepository.java
+C:\Users\PC\Documents\workspace-spring-tool-suite-4-4.12.0.RELEASE\MpaBackEnd\src\main\java\com\distribuidora\searchengine\dto\Denunciagrilla.java
+C:\Users\PC\Documents\workspace-spring-tool-suite-4-4.12.0.RELEASE\MpaBackEnd\src\main\java\com\distribuidora\searchengine\dto\DenunciaDato.java
