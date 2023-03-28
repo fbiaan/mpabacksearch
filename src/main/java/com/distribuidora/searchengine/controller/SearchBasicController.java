@@ -137,30 +137,32 @@ public class SearchBasicController {
 	}
 
 	
-	public List getUnExpe(String param1) {
+	public List getUnDenun(String param1) {
 		String sql ="select idprev_digital, nro_prev , localidad_hecho ,prev_fecha , relatos_hecho "  
 				+	"from prev_digital pd WHERE idprev_digital = " + param1;
 		return jdbcTemplate.queryForList(sql); 
 	}
 	
-	@GetMapping("/getUnExpe/{param1}")
-	public Map<String, Object> getUnExpediente(@PathVariable final String param1) {
+	@GetMapping("/getUnaDenuncia/{param1}")
+	public Map<String, Object> getUnaDenuncia(@PathVariable final String param1) {
 		return executeService(() -> {
-			return getUnExpe(param1);
+			return getUnDenun(param1);
 			
 		});
 	}
 
-	public List getPartesExpe(String param1) {
+
+	
+	public List getPartesDenun(String param1) {
 		String sql ="select idprev_ditital_partes , idprev_digital , prev_id_tipopersona , nombre , apellido , dni , fecha_nac , celular , barrio , localidad "  
 				  + "from prev_digital_partes pdp where idprev_digital = " + param1;
 		return jdbcTemplate.queryForList(sql); 
 	}
 	
-	@GetMapping("/getPartesExpe/{param1}")
-	public Map<String, Object> getPartesExpediente(@PathVariable final String param1) {
+	@GetMapping("/getPartesDenuncia/{param1}")
+	public Map<String, Object> getPartesDenuncia(@PathVariable final String param1) {
 		return executeService(() -> {
-			return getPartesExpe(param1);
+			return getPartesDenun(param1);
 			
 		});
 	}
@@ -252,6 +254,34 @@ public class SearchBasicController {
 		return new ResponseEntity<>(lstdato, HttpStatus.OK);
 	}
 
+	
+	// <<<<<<<<<<<<<<<<<<<<           parte 2 de EXPEDIENTE REAL <<<<<<<<<<<<<<<
+	//-----------------------------------------------------------------
+	
+	@GetMapping("/getUnExpediente/{param1}")
+	public ResponseEntity<?> getUnExpe(@PathVariable final String param1) {
+		String sql ="select idmes_expedientes , nro_exp , fecha_ingreso , caratula  from mes_expedientes me \r\n"
+				+ "where idmes_expedientes = " + param1;
+		return new ResponseEntity<>(jdbcTemplate.queryForList(sql),HttpStatus.OK);		
+	}
+	
+	@GetMapping("/getpartesExpe/{param1}")
+	public ResponseEntity<?> getPartesExpe(@PathVariable final String param1) {
+		String sql ="select mep.idmes_expedientes_personas idper , mpc.nombre tipo , mep.nombre, mep.apellido , mep.dni  from mes_expedientes_personas mep \r\n"
+				+ "INNER JOIN mes_personas_caracter mpc ON mep.idmes_personas_caracter = mpc.idmes_personas_caracter \r\n"
+				+ "where idmes_expedientes =" + param1;
+		return new ResponseEntity<>(jdbcTemplate.queryForList(sql),HttpStatus.OK);	
+	}
+	
+	@GetMapping("/getexpecondenun/{param1}")
+	public ResponseEntity<?> getExpeconDenuncia(@PathVariable final String param1) {
+		String sql ="select idprev_digital , idmes_expedientes , prev_localidad , expediente_seccional , \r\n"
+				+ "relatos_hecho  from prev_digital pd \r\n"
+				+ "where idmes_expedientes =" + param1;
+		return new ResponseEntity<>(jdbcTemplate.queryForList(sql),HttpStatus.OK);	
+	}
+	
+		
 	
 	
 }
