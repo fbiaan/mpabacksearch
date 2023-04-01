@@ -281,7 +281,24 @@ public class SearchBasicController {
 		return new ResponseEntity<>(jdbcTemplate.queryForList(sql),HttpStatus.OK);	
 	}
 	
+	
+	@GetMapping("/getsecuestros/{param1}")
+	public ResponseEntity<?> getSecuestros(@PathVariable final String param1) {
+		String sql ="select (FLOOR(RAND()* 10000)) as idsec, CONCAT('Automotor : ', mesa.marca, ' ' , mesa.modelo, mesa.dominio) as secu from mes_expedientes_secuestro_automotor mesa \r\n"
+				+ "WHERE idmes_expedientes = " + param1 +  "\r\n"
+				+ "union all\r\n"
+				+ "select (FLOOR(RAND()* 10000)) as idsec, CONCAT('Otros : ' , meso.detalle, ' ' ,meso.fecha, IFNULL(meso.evidencia,' sin evidencia.')) from mes_expedientes_secuestro_otro meso \r\n"
+				+ "WHERE idmes_expedientes = " + param1 +  "\r\n"
+				+ "union all \r\n"
+				+ "select (FLOOR(RAND()* 10000)) as idsec, CONCAT('Dinero : ', mesd.tipo , ' ' ,mesd.cantidad , mesd.detalle)  from mes_expedientes_secuestro_dinero mesd  \r\n"
+				+ "WHERE idmes_expedientes = " + param1 +  "\r\n"
+				+ "union all \r\n"
+				+ "select (FLOOR(RAND()* 10000)) as idsec, CONCAT('Arma : ', mesa2.tipo, ' ' ,mesa2.marca, mesa2.calibre,mesa2.detalle) from mes_expedientes_secuestro_arma mesa2   \r\n"
+				+ "WHERE idmes_expedientes = " + param1;
 		
+		return new ResponseEntity<>(jdbcTemplate.queryForList(sql),HttpStatus.OK);	
+	}
+	
 	
 	
 }

@@ -129,6 +129,56 @@ public class ProceduresMysqlController {
 		return new ResponseEntity<>(lstLineas, HttpStatus.OK);
 	}
 
+	@GetMapping("/fseach442/{param1}")
+	public String soloParamprueba442(@PathVariable String param1)  {
+		String dbURL = "jdbc:mysql://168.181.186.118:3306/mpasis";
+        String user = "dba";
+        String password = "55alfred55";
+		
+		
+		//  analisis de param1 
+		System.out.println(param1);
+		
+		// trabjamos el llamado del front 
+		// ejemlo +%22actuaciones%20informativas%22%20fernando%20ariel%20palacios
+
+		int primercomilla = param1.indexOf('"');
+		String criteriocomilla = "";
+		String criterioFront= "";
+		String comparaB = "!";
+		if (param1.substring(0,1).equals(comparaB)) {
+			String criterioNro = '"' + param1.substring(1, param1.length()) + '"';
+			System.out.println("final al api :" + criterioNro);
+			return (criterioNro);
+		}
+		
+		if (primercomilla + 1 > 0 ) {
+			criteriocomilla = param1.substring(primercomilla + 1, param1.length());
+			int segcomilla = criteriocomilla.indexOf('"');
+			criteriocomilla = param1.substring(primercomilla , segcomilla + 2);
+			System.out.println(criteriocomilla);
+		
+			
+			if (segcomilla < param1.length()) {
+				criterioFront  = param1.substring(segcomilla + 2,param1.length());
+				//criterioFront  = "+" + criterioFront.replace("  ", " ");
+				System.out.println(criterioFront);
+				criterioFront  = criterioFront.replace(" ", " +");
+				System.out.println(criterioFront);
+			}
+		}else
+		{
+			criterioFront  = param1;
+			criterioFront  = criterioFront.replace(" ", " +");
+		}
+		String finalCriteria = "+" + (criteriocomilla.trim()) + criterioFront;
+		System.out.println("final al api :" + finalCriteria);
+		
+		
+		return (finalCriteria);
+	}
+	
+	
 	
 	@GetMapping("/fseach2/{param1}")
 	public ResponseEntity<?> llamaFsearch2(@PathVariable String param1) throws SQLException {
@@ -140,20 +190,29 @@ public class ProceduresMysqlController {
 		//  analisis de param1 
 		System.out.println(param1);
 		
+		// trabjamos el llamado del front 
+		// ejemlo +%22actuaciones%20informativas%22%20fernando%20ariel%20palacios
+		
+		String criterioFront  = soloParamprueba442(param1);
+		System.out.println(criterioFront);
+		//
 		String firsCriteria = param1.replace("+", "");
 		firsCriteria = firsCriteria.replace("-", "");
 		String[] textoSeparado = firsCriteria.split(" "); 
 		String finalCriteria = textoSeparado[0];
-	
+		System.out.println(finalCriteria);
+		
 		//param1 = param1 + ",exp=1&den=1&par=1,desde=2013-05-01&hasta=2024-01-01)";
 		String param2 = "exp=1&den=1&par=1";
 		String param3 = "desde=2013-05-01&hasta=2024-01-01";
 		CallableStatement statement = conn.prepareCall("{call FMatchSearchParam(?,?,?)}");
-		statement.setString(1, param1);
+		statement.setString(1, criterioFront);
 		statement.setString(2, param2);
 		statement.setString(3, param3);
 		boolean hadResults = statement.execute();
-	
+		
+		
+		
 		List<Integer> listaResul = new ArrayList<>();
 		HashMap<Integer, String> hasDato = new HashMap<>();
 		HashMap<Integer, String> hasFecha = new HashMap<>();
@@ -186,9 +245,15 @@ public class ProceduresMysqlController {
 		List<ModeloX> lstModel = new ArrayList<>();
 		lstSinduplicados.forEach((linea) -> {
 			String idmesexpe = linea.toString();
+			String sqlNro = "select nro_exp  from mes_expedientes me where idmes_expedientes = " + idmesexpe;
+			String nroExpe = jdbcTemplate.queryForObject(sqlNro, String.class);
+			
+			
+			
 			ModeloX lineaModel = new ModeloX();
+			lineaModel.setIdexpelong(idmesexpe);
 			lineaModel.setCabezeraDerTit("LEGAJO");
-			lineaModel.setCabezeraDerDato(linea.toString());
+			lineaModel.setCabezeraDerDato(nroExpe + "(" + idmesexpe + ")");
 			lineaModel.setCabezeraIzq(hasOpt.get(linea));
 			
 			
@@ -202,7 +267,7 @@ public class ProceduresMysqlController {
 			try {
 			 titulo = jdbcTemplate.queryForObject(sqlTit, String.class);
 			 } catch (DataAccessException ex) {
-				 titulo  = "NO ENCUENTRA SECTOR - sin registros en tabla mes_exp_mov_det";
+				 titulo  = "NO ENCUENTRA SECTOR - sin registros en DB";
 			 }
 			
 			lineaModel.setSectoTitulo(titulo);
@@ -242,7 +307,7 @@ public class ProceduresMysqlController {
 			
 			// completo datos de la lista con accesso a la db 
 			// CAMPO PERSONAS partes de mes expe personas
-			String sql ="SELECT COUNT(idmes_expedientes_personas ) \r\n"
+			String sql ="SELECT COUNT(idmes_expedientes_personas) \r\n"
 					+ "FROM mes_expedientes_personas mep \r\n"
 					+ "WHERE idmes_expedientes =" + idmesexpe;
 			List<Integer> cuentaper = jdbcTemplate.queryForList(sql, Integer.class); 
@@ -291,6 +356,11 @@ public class ProceduresMysqlController {
 		});
 				
 		return new ResponseEntity<>(lstModel, HttpStatus.OK);
+	}
+
+	private void setCabezeraDerDato(String idmesexpe) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

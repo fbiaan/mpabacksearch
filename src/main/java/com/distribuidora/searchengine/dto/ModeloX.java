@@ -13,6 +13,7 @@ public class ModeloX {
 	private String AbajoSecuestros;
 	private String AbajoTituloDelito;
 	private String Fecha1;
+	private String idexpelong;
 	
 	
 	
@@ -92,6 +93,14 @@ public class ModeloX {
 	}
 	public void setFecha1(String fecha1) {
 		Fecha1 = fecha1;
+	}
+
+	public String getIdexpelong() {
+		return idexpelong;
+	}
+
+	public void setIdexpelong(String idexpelong) {
+		this.idexpelong = idexpelong;
 	}
 	
 	
