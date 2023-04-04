@@ -196,12 +196,14 @@ public class ProceduresMysqlController {
 		//  analisis de param1 
 		System.out.println(param1);
 		
+		/*
 		Properties p = new Properties();
 		p.load(new FileReader("files/config.properties"));
 		p.setProperty("valorparam", param1);
 		p.store(new FileWriter("files/config.properties"), "ultima busqueda");
 		// trabjamos el llamado del front 
 		// ejemlo +%22actuaciones%20informativas%22%20fernando%20ariel%20palacios
+		*/
 		
 		String criterioFront  = soloParamprueba442(param1);
 		System.out.println(criterioFront);
