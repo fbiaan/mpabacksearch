@@ -1,5 +1,8 @@
 package com.distribuidora.searchengine.controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -259,9 +263,15 @@ public class SearchBasicController {
 	//-----------------------------------------------------------------
 	
 	@GetMapping("/getUnExpediente/{param1}")
-	public ResponseEntity<?> getUnExpe(@PathVariable final String param1) {
+	public ResponseEntity<?> getUnExpe(@PathVariable final String param1) throws FileNotFoundException, IOException {
 		String sql ="select idmes_expedientes , nro_exp , fecha_ingreso , caratula  from mes_expedientes me \r\n"
 				+ "where idmes_expedientes = " + param1;
+		
+		//Properties p = new Properties();
+		//p.load(new FileReader("files/config.properties"));
+		
+		//System.out.println("uno="+p.getProperty("valorparam"));
+		
 		return new ResponseEntity<>(jdbcTemplate.queryForList(sql),HttpStatus.OK);		
 	}
 	
@@ -299,6 +309,13 @@ public class SearchBasicController {
 		return new ResponseEntity<>(jdbcTemplate.queryForList(sql),HttpStatus.OK);	
 	}
 	
-	
+	@GetMapping("/criteriobus")
+	public String getCriterio() throws FileNotFoundException, IOException {
+		Properties p = new Properties();
+		p.load(new FileReader("files/config.properties"));
+		
+		System.out.println("uno="+p.getProperty("valorparam"));
+		return p.getProperty("valorparam");
+	}
 	
 }

@@ -1,5 +1,9 @@
 package com.distribuidora.searchengine.controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.distribuidora.searchengine.controller.SearchBasicController.RestServiceExecution;
 import com.distribuidora.searchengine.dto.DenunciaDato;
 import com.distribuidora.searchengine.dto.ModeloX;
+import com.distribuidora.searchengine.dto.Pasavar;
 import com.distribuidora.searchengine.dto.ResulProce1;
 import com.distribuidora.searchengine.service.DenunciaService;
 
@@ -178,10 +184,10 @@ public class ProceduresMysqlController {
 		return (finalCriteria);
 	}
 	
-	
+
 	
 	@GetMapping("/fseach2/{param1}")
-	public ResponseEntity<?> llamaFsearch2(@PathVariable String param1) throws SQLException {
+	public ResponseEntity<?> llamaFsearch2(@PathVariable String param1) throws SQLException, FileNotFoundException, IOException {
 		String dbURL = "jdbc:mysql://168.181.186.118:3306/mpasis";
         String user = "dba";
         String password = "55alfred55";
@@ -190,6 +196,10 @@ public class ProceduresMysqlController {
 		//  analisis de param1 
 		System.out.println(param1);
 		
+		Properties p = new Properties();
+		p.load(new FileReader("files/config.properties"));
+		p.setProperty("valorparam", param1);
+		p.store(new FileWriter("files/config.properties"), "ultima busqueda");
 		// trabjamos el llamado del front 
 		// ejemlo +%22actuaciones%20informativas%22%20fernando%20ariel%20palacios
 		
