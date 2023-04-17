@@ -163,10 +163,8 @@ public class PdfController {
 	public ResponseEntity<?> BuscarenFolderLinux(@PathVariable String criterio) {
 		//File dir = new File("c:\\intel\\pdf");
 		//File dir = new File("C:\\pdf\\includes\\archivos_preventivo");
-		File file1 = new File("");
-		String directoryName = file1.getAbsoluteFile().toString();
-		System.out.println("Current Working Directory is = " + directoryName);
-		File dir = new File("// "+ directoryName);
+		File dir = new File("//unidad");
+
 		String[] ficheros = dir.list();//ARREGLO QUE ALMACENARÁ TODOS LOS NOMBRES DE LOS ARCHIVOS QUE ESTAN DENTRO DEL OBJETO.
 		List<ModelPdf1> lstrespu = new ArrayList<ModelPdf1>();
         if (ficheros == null)//EXCEPCION
@@ -176,7 +174,7 @@ public class PdfController {
                 String ruta=new String();//VARIABLE QUE DETERMINARA LA RUTA DEL ARCHIVO A LEER.
                 //ruta=("c:\\intel\\pdf\\"+ficheros[x]); //SE ALMACENA LA RUTA DEL ARCHIVO A LEER.
                 //ruta=("C:\\pdf\\includes\\archivos_preventivo\\"+ficheros[x]);
-                ruta=("// "+ directoryName + "//" + ficheros[x]);
+                ruta=("//unidad//"+ficheros[x]);
                 System.out.println(x + " .- " + ruta);
                   try {
                 	ModelPdf1 respulinea = new ModelPdf1();
@@ -235,10 +233,8 @@ public class PdfController {
 	public ResponseEntity<?> BuscarenFolderLinuxbarra(@PathVariable String criterio) {
 		//File dir = new File("c:\\intel\\pdf");
 		//File dir = new File("C:\\pdf\\includes\\archivos_preventivo");
-		File file1 = new File("");
-		String directoryName = file1.getAbsoluteFile().toString();
-		System.out.println("Current Working Directory is = " + directoryName);
-		File dir = new File("/ "+ directoryName);
+		File dir = new File("//unidad//pdf");
+		
 		String[] ficheros = dir.list();//ARREGLO QUE ALMACENARÁ TODOS LOS NOMBRES DE LOS ARCHIVOS QUE ESTAN DENTRO DEL OBJETO.
 		List<ModelPdf1> lstrespu = new ArrayList<ModelPdf1>();
         if (ficheros == null)//EXCEPCION
@@ -248,7 +244,7 @@ public class PdfController {
                 String ruta=new String();//VARIABLE QUE DETERMINARA LA RUTA DEL ARCHIVO A LEER.
                 //ruta=("c:\\intel\\pdf\\"+ficheros[x]); //SE ALMACENA LA RUTA DEL ARCHIVO A LEER.
                 //ruta=("C:\\pdf\\includes\\archivos_preventivo\\"+ficheros[x]);
-                ruta=("/ "+ directoryName + "/" + ficheros[x]);
+                ruta=("//unidad//pdf//"+ficheros[x]);
                 System.out.println(x + " .- " + ruta);
                   try {
                 	ModelPdf1 respulinea = new ModelPdf1();

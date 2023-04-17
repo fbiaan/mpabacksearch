@@ -1,5 +1,6 @@
 FROM openjdk:11
 VOLUME /tmp
+VOLUME /unidad
 EXPOSE 9090
 ARG JAR_FILE=target/searchengine-0.0.1-SNAPSHOT.jar
 ADD ${JAR_FILE} app.jar
