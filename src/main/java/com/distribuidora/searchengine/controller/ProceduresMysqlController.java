@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.distribuidora.searchengine.controller.SearchBasicController.RestServiceExecution;
 import com.distribuidora.searchengine.dto.DenunciaDato;
+import com.distribuidora.searchengine.dto.ModelPdf1;
 import com.distribuidora.searchengine.dto.ModeloX;
 import com.distribuidora.searchengine.dto.Pasavar;
 import com.distribuidora.searchengine.dto.ResulProce1;
@@ -59,6 +60,8 @@ public class ProceduresMysqlController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	private DenunciaService denunciaService;
 	
 	@GetMapping("/fseach1/{param1}")
 	public ResponseEntity<?> llamaFsearch1(@PathVariable String param1) throws SQLException {
@@ -366,7 +369,21 @@ public class ProceduresMysqlController {
 			lstModel.add(lineaModel);
 			
 		});
-				
+		
+		//AGREGO PDF 
+		// saco los mas  tiene que ir vacio
+		String criteriopdf  = criterioFront.replace("+", "");
+		List<ModelPdf1> lstpdf = denunciaService.todospdf(criteriopdf);
+		for (int i=0; i < lstpdf.size() ; i++  ){
+			ModeloX lineaModel = new ModeloX();
+			lineaModel.setCabezeraIzq("ARCHIVO : " + lstpdf.get(i).getNombreArchivo() );
+			lineaModel.setSectoTitulo(lstpdf.get(i).getPathArchivo());
+			lineaModel.setTextoMedio(lstpdf.get(i).getRespuesta());
+			lineaModel.setCabezeraDerTit("PDF");
+			lineaModel.setFecha1("__/__/__");
+			lstModel.add(lineaModel);
+		}	
+		
 		return new ResponseEntity<>(lstModel, HttpStatus.OK);
 	}
 
