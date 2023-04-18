@@ -374,7 +374,9 @@ public class ProceduresMysqlController {
 		// saco los mas  tiene que ir vacio
 		String criteriopdf  = criterioFront.replace("+", "");
 		//List<ModelPdf1> lstpdf = denunciaService.todospdf(criteriopdf);
+		System.out.println("criterio antes de llamar al service :" + criteriopdf);
 		List<ModelPdf1> lstpdf = denunciaService.todospdflinux(criteriopdf);
+		System.out.println(" lista del service " + lstpdf.size()); 
 		for (int i=0; i < lstpdf.size() ; i++  ){
 			ModeloX lineaModel = new ModeloX();
 			lineaModel.setCabezeraIzq("ARCHIVO : " + lstpdf.get(i).getNombreArchivo() );

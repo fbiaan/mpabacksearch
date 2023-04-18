@@ -156,6 +156,7 @@ public class DenunciaService {
 	
 	
 	public List<ModelPdf1> todospdflinux (String criterio) {
+		System.out.println("entro a todos pdf linux con criterio  "  + criterio	);
 		List<String> losPath = new ArrayList<>();
 		losPath.add("//unidad//pdf//includes//archivos_preventivo");
 		losPath.add("//unidad//pdf//includes//archivos_firmados");
@@ -174,13 +175,14 @@ public class DenunciaService {
 		losPathreal.add("/home/repositorio/pdf/sne/escritosAdjuntos");
 		losPathreal.add("/home/repositorio/pdf/sne/escritosPDF");
 		
-		
+		System.out.println("lista de paht   "  + losPath.size()	);
 		List<ModelPdf1> lstrespu = new ArrayList<ModelPdf1>();
 		int tot = 0;
 		for (int i=0; i<losPath.size(); i++) {
 					//File dir = new File("c:\\intel\\pdf");
 			String mipath = losPath.get(i);
 			String pathlinux = losPathreal.get(i);
+			System.out.println("entro al path " + losPath.get(i)); 
 			File dir = new File(mipath);
 			String[] ficheros = dir.list();//ARREGLO QUE ALMACENARÁ TODOS LOS NOMBRES DE LOS ARCHIVOS QUE ESTAN DENTRO DEL OBJETO.
 			
@@ -193,7 +195,7 @@ public class DenunciaService {
 	                //ruta=("c:\\intel\\pdf\\"+ficheros[x]); //SE ALMACENA LA RUTA DEL ARCHIVO A LEER.
 	                ruta=(mipath + "\\"+ficheros[x]);
 	                rutaLinux=(pathlinux + "/" + pathlinux);
-	                //System.out.println(tot + " - " + x + " .- " + ruta);
+	                System.out.println(tot + " - " + x + " .- " + ruta);
 	                tot++;
 	                  try {
 	                	ModelPdf1 respulinea = new ModelPdf1();
@@ -240,7 +242,7 @@ public class DenunciaService {
 	                      if(e.toString()!=null){
 	                        File archivo=new File("dañado_"+ficheros[x]);//SEPARA LOS DAÑADOS
 	                      }
-	                      //System.out.println("Archivo dañado "+ficheros[x]);// INDICA EN CONSOLA CUALES SON LOS DAÑADOS
+	                      System.out.println("Archivo dañado "+ficheros[x]);// INDICA EN CONSOLA CUALES SON LOS DAÑADOS
 	                      //e.printStackTrace();
 	                  }//CATCH
 	                  

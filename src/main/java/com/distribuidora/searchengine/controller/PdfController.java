@@ -290,7 +290,7 @@ public class PdfController {
                         File archivo=new File("dañado_"+ficheros[x]);//SEPARA LOS DAÑADOS
                       }
                       System.out.println("Archivo dañado "+ficheros[x]);// INDICA EN CONSOLA CUALES SON LOS DAÑADOS
-                      e.printStackTrace();
+                      //e.printStackTrace();
                   }//CATCH
                   
               }//FOR	
