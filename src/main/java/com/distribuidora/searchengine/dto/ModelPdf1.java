@@ -6,9 +6,16 @@ public class ModelPdf1 {
 	private String respuesta;
 	private String numeroPaginas;
 	private String lugarEncontrado;
+	private String pathlinux;
 	
 	
 	
+	public String getPathlinux() {
+		return pathlinux;
+	}
+	public void setPathlinux(String pathlinux) {
+		this.pathlinux = pathlinux;
+	}
 	public ModelPdf1() {
 		super();
 		// TODO Auto-generated constructor stub

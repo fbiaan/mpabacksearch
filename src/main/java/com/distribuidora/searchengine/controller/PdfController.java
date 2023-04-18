@@ -261,7 +261,7 @@ public class PdfController {
         		    if (intIndex != - 1) {
         		    	buscar = "Palabra encontrada , posicion " + intIndex.toString();
         		    	respulinea.setNombreArchivo(ficheros[x]);
-	        		    respulinea.setLugarEncontrado(ruta);
+	        		    respulinea.setPathArchivo(ruta);
 	        		    respulinea.setRespuesta(buscar);
 	        		    //respulinea.setLugarEncontrado("no disponible - demo version");
 	        		    

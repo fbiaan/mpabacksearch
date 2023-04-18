@@ -373,7 +373,8 @@ public class ProceduresMysqlController {
 		//AGREGO PDF 
 		// saco los mas  tiene que ir vacio
 		String criteriopdf  = criterioFront.replace("+", "");
-		List<ModelPdf1> lstpdf = denunciaService.todospdf(criteriopdf);
+		//List<ModelPdf1> lstpdf = denunciaService.todospdf(criteriopdf);
+		List<ModelPdf1> lstpdf = denunciaService.todospdflinux(criteriopdf);
 		for (int i=0; i < lstpdf.size() ; i++  ){
 			ModeloX lineaModel = new ModeloX();
 			lineaModel.setCabezeraIzq("ARCHIVO : " + lstpdf.get(i).getNombreArchivo() );
@@ -381,6 +382,7 @@ public class ProceduresMysqlController {
 			lineaModel.setTextoMedio(lstpdf.get(i).getRespuesta());
 			lineaModel.setCabezeraDerTit("PDF");
 			lineaModel.setFecha1("__/__/__");
+			lineaModel.setAbajoTituloDelito(lstpdf.get(i).getPathlinux());
 			lstModel.add(lineaModel);
 		}	
 		
