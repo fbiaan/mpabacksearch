@@ -193,7 +193,7 @@ public class DenunciaService {
 	                String ruta=new String();//VARIABLE QUE DETERMINARA LA RUTA DEL ARCHIVO A LEER.
 	                String rutaLinux = new String();
 	                //ruta=("c:\\intel\\pdf\\"+ficheros[x]); //SE ALMACENA LA RUTA DEL ARCHIVO A LEER.
-	                ruta=(mipath + "\\"+ficheros[x]);
+	                ruta=(mipath + "//"+ficheros[x]);
 	                rutaLinux=(pathlinux + "/" + pathlinux);
 	                System.out.println(tot + " - " + x + " .- " + ruta);
 	                tot++;
