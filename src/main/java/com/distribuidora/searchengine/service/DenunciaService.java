@@ -136,9 +136,9 @@ public class DenunciaService {
 	        		    
 	        		    
 	                  } catch (IOException e) {
-	                      if(e.toString()!=null){
-	                        File archivo=new File("dañado_"+ficheros[x]);//SEPARA LOS DAÑADOS
-	                      }
+	                    //  if(e.toString()!=null){
+	                    //    File archivo=new File("dañado_"+ficheros[x]);//SEPARA LOS DAÑADOS
+	                    //  }
 	                      //System.out.println("Archivo dañado "+ficheros[x]);// INDICA EN CONSOLA CUALES SON LOS DAÑADOS
 	                      //e.printStackTrace();
 	                  }//CATCH
@@ -194,8 +194,8 @@ public class DenunciaService {
 	                String rutaLinux = new String();
 	                //ruta=("c:\\intel\\pdf\\"+ficheros[x]); //SE ALMACENA LA RUTA DEL ARCHIVO A LEER.
 	                ruta=(mipath + "//"+ficheros[x]);
-	                rutaLinux=(pathlinux + "/" + pathlinux);
-	                System.out.println(tot + " - " + x + " .- " + ruta);
+	                rutaLinux=(pathlinux + "/" + ficheros[x]);
+	                //System.out.println(tot + " - " + x + " .- " + ruta);
 	                tot++;
 	                  try {
 	                	ModelPdf1 respulinea = new ModelPdf1();
@@ -214,7 +214,7 @@ public class DenunciaService {
 	        		    	respulinea.setNombreArchivo(ficheros[x]);
 		        		    respulinea.setPathArchivo(ruta);
 		        		    respulinea.setRespuesta(buscar);
-		        		    respulinea.setPathArchivo(mipath);
+		        		    //respulinea.setPathArchivo(mipath);
 		        		    respulinea.setPathlinux(rutaLinux);
 		        		    //respulinea.setLugarEncontrado("no disponible - demo version");
 		        		    
@@ -239,10 +239,10 @@ public class DenunciaService {
 	        		    
 	        		    
 	                  } catch (IOException e) {
-	                      if(e.toString()!=null){
-	                        File archivo=new File("dañado_"+ficheros[x]);//SEPARA LOS DAÑADOS
-	                      }
-	                      System.out.println("Archivo dañado "+ficheros[x]);// INDICA EN CONSOLA CUALES SON LOS DAÑADOS
+	                     // if(e.toString()!=null){
+	                     //   File archivo=new File("dañado_"+ficheros[x]);//SEPARA LOS DAÑADOS
+	                    //  }
+	                      //System.out.println("Archivo dañado "+ficheros[x]);// INDICA EN CONSOLA CUALES SON LOS DAÑADOS
 	                      //e.printStackTrace();
 	                  }//CATCH
 	                  

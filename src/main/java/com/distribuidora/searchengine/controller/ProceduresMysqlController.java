@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.distribuidora.searchengine.controller.SearchBasicController.RestServiceExecution;
@@ -190,7 +191,13 @@ public class ProceduresMysqlController {
 
 	
 	@GetMapping("/fseach2/{param1}")
-	public ResponseEntity<?> llamaFsearch2(@PathVariable String param1) throws SQLException, FileNotFoundException, IOException {
+	public ResponseEntity<?> llamaFsearch2(@PathVariable String param1,
+			@RequestParam(value="tipobusqueda") String tipobusqueda) throws SQLException, FileNotFoundException, IOException {
+		
+		List<ModeloX> lstModel = new ArrayList<>();	
+		String criterioFront  = soloParamprueba442(param1);
+	if (tipobusqueda.equals("db") || tipobusqueda.equals("dbpdf")) {	
+		
 		String dbURL = "jdbc:mysql://168.181.186.118:3306/mpasis";
         String user = "dba";
         String password = "55alfred55";
@@ -208,7 +215,7 @@ public class ProceduresMysqlController {
 		// ejemlo +%22actuaciones%20informativas%22%20fernando%20ariel%20palacios
 		*/
 		
-		String criterioFront  = soloParamprueba442(param1);
+		//String criterioFront  = soloParamprueba442(param1);
 		System.out.println(criterioFront);
 		//
 		String firsCriteria = param1.replace("+", "");
@@ -257,7 +264,7 @@ public class ProceduresMysqlController {
 		
 		// ya tengo la lista de id sin repetir 
 		// procedo a armar los campos
-		List<ModeloX> lstModel = new ArrayList<>();
+		//List<ModeloX> lstModel = new ArrayList<>();
 		lstSinduplicados.forEach((linea) -> {
 			String idmesexpe = linea.toString();
 			String sqlNro = "select nro_exp  from mes_expedientes me where idmes_expedientes = " + idmesexpe;
@@ -369,7 +376,9 @@ public class ProceduresMysqlController {
 			lstModel.add(lineaModel);
 			
 		});
-		
+	} // del if de tipo busqueda	
+	
+	if (tipobusqueda.equals("pdf") || tipobusqueda.equals("dbpdf")) {
 		//AGREGO PDF 
 		// saco los mas  tiene que ir vacio
 		String criteriopdf  = criterioFront.replace("+", "");
@@ -379,15 +388,15 @@ public class ProceduresMysqlController {
 		System.out.println(" lista del service " + lstpdf.size()); 
 		for (int i=0; i < lstpdf.size() ; i++  ){
 			ModeloX lineaModel = new ModeloX();
-			lineaModel.setCabezeraIzq("ARCHIVO : " + lstpdf.get(i).getNombreArchivo() );
+			lineaModel.setCabezeraIzq(lstpdf.get(i).getNombreArchivo() );
 			lineaModel.setSectoTitulo(lstpdf.get(i).getPathArchivo());
 			lineaModel.setTextoMedio(lstpdf.get(i).getRespuesta());
 			lineaModel.setCabezeraDerTit("PDF");
-			lineaModel.setFecha1("__/__/__");
+			lineaModel.setFecha1("__");
 			lineaModel.setAbajoTituloDelito(lstpdf.get(i).getPathlinux());
 			lstModel.add(lineaModel);
 		}	
-		
+		} // del iff de tipo busqueda pdf
 		return new ResponseEntity<>(lstModel, HttpStatus.OK);
 	}
 
