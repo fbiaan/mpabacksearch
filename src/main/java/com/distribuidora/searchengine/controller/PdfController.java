@@ -7,20 +7,27 @@ import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.distribuidora.searchengine.dto.ModelPdf1;
+import com.distribuidora.searchengine.service.DenunciaService;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/pdf")
 public class PdfController {
+	
+	@Autowired
+	DenunciaService denunciaService;
 
 	@GetMapping("/leer")
 	public String leerpdf() {
@@ -384,5 +391,17 @@ public class PdfController {
 		return new ResponseEntity<>(lstrespu, HttpStatus.OK);
 	} 
 	
+	@PostMapping("/encodepdf")
+	public byte[] encodePdf () throws IOException {
+		byte[] pdfcode = denunciaService.getPdfByte();
+		return pdfcode;
+	}
+	
+	
+	@PostMapping("/enviarpdf")
+	public byte[] enviarPdf(@RequestParam(value="filepdf") String filepdf) throws IOException {
+		byte[] pdfcode = denunciaService.getPdfBytepath(filepdf);
+		return pdfcode;	
+	}
 	
 }

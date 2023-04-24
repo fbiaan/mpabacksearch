@@ -1,0 +1,15 @@
+com\distribuidora\searchengine\controller\ProceduresMysqlController$RestServiceExecution.class
+com\distribuidora\searchengine\dto\ModeloX.class
+com\distribuidora\searchengine\dto\Pasavar.class
+com\distribuidora\searchengine\dto\Resugrilla.class
+com\distribuidora\searchengine\dto\ModelPdf1.class
+com\distribuidora\searchengine\dto\ResulProce1.class
+com\distribuidora\searchengine\dto\Denunciagrilla.class
+com\distribuidora\searchengine\dto\DenunciaDato.class
+com\distribuidora\searchengine\controller\SearchBasicController.class
+com\distribuidora\searchengine\controller\SearchBasicController$RestServiceExecution.class
+com\distribuidora\searchengine\controller\ProceduresMysqlController.class
+com\distribuidora\searchengine\service\DenunciaService.class
+com\distribuidora\searchengine\MpaBackEndApplication.class
+com\distribuidora\searchengine\repository\DenunciaRepository.class
+com\distribuidora\searchengine\controller\PdfController.class

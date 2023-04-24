@@ -2,6 +2,9 @@ package com.distribuidora.searchengine.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -257,4 +260,29 @@ public class DenunciaService {
 
 	}
 	
+	public byte[] getPdfByte() throws IOException {
+
+		try {
+			String pdfFile = new String();
+			pdfFile = "C://pdf//includes//archivos_preventivo//tram-6435d53f8ecab.pdf";
+			Path pdfPath = Paths.get(pdfFile);
+			byte[] pdf = Files.readAllBytes(pdfPath);
+			return pdf;
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
+	}
+	
+	public byte[] getPdfBytepath(String pdfpath) throws IOException {
+
+		try {
+			String pdfFile = new String();
+			pdfFile = pdfpath;
+			Path pdfPath = Paths.get(pdfFile);
+			byte[] pdf = Files.readAllBytes(pdfPath);
+			return pdf;
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
+	}
 }
