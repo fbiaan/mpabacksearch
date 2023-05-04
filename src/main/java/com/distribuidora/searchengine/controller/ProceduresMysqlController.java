@@ -280,11 +280,15 @@ public class ProceduresMysqlController {
 			
 			
 			//  <<<  titulo medio azul  lugar lugar
-			String sqlTit = "SELECT cs.label from mes_expedientes me \r\n"
-					+ "INNER JOIN mes_expedientes_movimientos_detalles memd ON me.idmes_expedientes = memd.idmes_expedientes \r\n"
-					+ "inner join mes_expedientes_movimientos mem ON mem.idmes_expedientes_movimientos = memd.idmes_expedientes_movimientos \r\n"
-					+ "inner join cfg_sectores cs on cs.id = memd.id_sector_anterior \r\n"
-					+ "where me.idmes_expedientes = " + idmesexpe + " limit 1";
+//			String sqlTit = "SELECT cs.label from mes_expedientes me \r\n"
+//					+ "INNER JOIN mes_expedientes_movimientos_detalles memd ON me.idmes_expedientes = memd.idmes_expedientes \r\n"
+//					+ "inner join mes_expedientes_movimientos mem ON mem.idmes_expedientes_movimientos = memd.idmes_expedientes_movimientos \r\n"
+//					+ "inner join cfg_sectores cs on cs.id = memd.id_sector_anterior \r\n"
+//					+ "where me.idmes_expedientes = " + idmesexpe + " limit 1";
+			
+			String sqlTit = "SELECT  cs.label  from mes_expedientes me\r\n"
+					+ "inner join cfg_sectores cs on cs.id = me.idmes_fiscalia_turno \r\n"
+					+ "where idmes_expedientes = " + idmesexpe + " limit 1";
 			String titulo = "";
 			try {
 			 titulo = jdbcTemplate.queryForObject(sqlTit, String.class);
