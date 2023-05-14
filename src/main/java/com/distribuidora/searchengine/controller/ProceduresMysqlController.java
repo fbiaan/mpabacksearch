@@ -265,120 +265,127 @@ public class ProceduresMysqlController {
 		// ya tengo la lista de id sin repetir 
 		// procedo a armar los campos
 		//List<ModeloX> lstModel = new ArrayList<>();
+		System.out.println("la lista tiene : " + lstSinduplicados.size());
 		lstSinduplicados.forEach((linea) -> {
 			String idmesexpe = linea.toString();
+			//System.out.println("en bucle para datos id mes expe : " + idmesexpe);
 			String sqlNro = "select nro_exp  from mes_expedientes me where idmes_expedientes = " + idmesexpe;
-			String nroExpe = jdbcTemplate.queryForObject(sqlNro, String.class);
 			
-			
-			
-			ModeloX lineaModel = new ModeloX();
-			lineaModel.setIdexpelong(idmesexpe);
-			lineaModel.setCabezeraDerTit("LEGAJO");
-			lineaModel.setCabezeraDerDato(nroExpe + "(" + idmesexpe + ")");
-			lineaModel.setCabezeraIzq(hasOpt.get(linea));
-			
-			
-			//  <<<  titulo medio azul  lugar lugar
-//			String sqlTit = "SELECT cs.label from mes_expedientes me \r\n"
-//					+ "INNER JOIN mes_expedientes_movimientos_detalles memd ON me.idmes_expedientes = memd.idmes_expedientes \r\n"
-//					+ "inner join mes_expedientes_movimientos mem ON mem.idmes_expedientes_movimientos = memd.idmes_expedientes_movimientos \r\n"
-//					+ "inner join cfg_sectores cs on cs.id = memd.id_sector_anterior \r\n"
-//					+ "where me.idmes_expedientes = " + idmesexpe + " limit 1";
-			
-			String sqlTit = "SELECT  cs.label  from mes_expedientes me\r\n"
-					+ "inner join cfg_sectores cs on cs.id = me.idmes_fiscalia_turno \r\n"
-					+ "where idmes_expedientes = " + idmesexpe + " limit 1";
-			String titulo = "";
 			try {
-			 titulo = jdbcTemplate.queryForObject(sqlTit, String.class);
-			 } catch (DataAccessException ex) {
-				 titulo  = "NO ENCUENTRA SECTOR - sin registros en DB";
-			 }
-			
-			lineaModel.setSectoTitulo(titulo);
-			
-			//texto medio 
-			// busco donde esta el primer criterio  variable  finalCriteria
-       	 	String todoResul1 = hasDato.get(linea);
-			if (todoResul1.length() < 200) { 
-				//lineaModel.setTextoMedio((String) hasDato.get(linea));
-			}else {
-				int indice = todoResul1.toUpperCase().indexOf(finalCriteria.toUpperCase());
-
-				if (todoResul1.length() < 300) {
-					if (indice > 200) {
-						todoResul1 = todoResul1.substring(indice - 100, todoResul1.length());
-					}else if (indice < 100) {
-						todoResul1 = todoResul1.substring(0 , indice +100);
-					}else {
-						todoResul1 = todoResul1.substring(indice - 100 , todoResul1.length());
-					}
+				String nroExpe = jdbcTemplate.queryForObject(sqlNro, String.class);
+				
+				
+				
+				ModeloX lineaModel = new ModeloX();
+				lineaModel.setIdexpelong(idmesexpe);
+				lineaModel.setCabezeraDerTit("LEGAJO");
+				lineaModel.setCabezeraDerDato(nroExpe + "(" + idmesexpe + ")");
+				lineaModel.setCabezeraIzq(hasOpt.get(linea));
+				
+				
+				//  <<<  titulo medio azul  lugar lugar
+	//			String sqlTit = "SELECT cs.label from mes_expedientes me \r\n"
+	//					+ "INNER JOIN mes_expedientes_movimientos_detalles memd ON me.idmes_expedientes = memd.idmes_expedientes \r\n"
+	//					+ "inner join mes_expedientes_movimientos mem ON mem.idmes_expedientes_movimientos = memd.idmes_expedientes_movimientos \r\n"
+	//					+ "inner join cfg_sectores cs on cs.id = memd.id_sector_anterior \r\n"
+	//					+ "where me.idmes_expedientes = " + idmesexpe + " limit 1";
+				
+				String sqlTit = "SELECT  cs.label  from mes_expedientes me\r\n"
+						+ "inner join cfg_sectores cs on cs.id = me.idmes_fiscalia_turno \r\n"
+						+ "where idmes_expedientes = " + idmesexpe + " limit 1";
+				String titulo = "";
+				try {
+				 titulo = jdbcTemplate.queryForObject(sqlTit, String.class);
+				 } catch (DataAccessException ex) {
+					 titulo  = "NO ENCUENTRA SECTOR - sin registros en DB";
+				 }
+				
+				lineaModel.setSectoTitulo(titulo);
+				
+				//texto medio 
+				// busco donde esta el primer criterio  variable  finalCriteria
+	       	 	String todoResul1 = hasDato.get(linea);
+				if (todoResul1.length() < 200) { 
+					//lineaModel.setTextoMedio((String) hasDato.get(linea));
 				}else {
-					if (indice < 100) {
-						todoResul1 = todoResul1.substring(0 , indice +100);	
-					} else if ((indice + 100) < todoResul1.length()) {
-						todoResul1 = todoResul1.substring(indice - 100 , indice +100);
-					} else {
-						todoResul1 = todoResul1.substring(indice - 100 , todoResul1.length());
-					}
-				}		
-			}
-			lineaModel.setTextoMedio(todoResul1);
-			
-			// otros arametro remitido a juicio
-			lineaModel.setAbajoRJ("SI");
-			lineaModel.setFecha1(hasFecha.get(linea));
-			lineaModel.setAbajoPreventivo("1");
-			
-			// completo datos de la lista con accesso a la db 
-			// CAMPO PERSONAS partes de mes expe personas
-			String sql ="SELECT COUNT(idmes_expedientes_personas) \r\n"
-					+ "FROM mes_expedientes_personas mep \r\n"
-					+ "WHERE idmes_expedientes =" + idmesexpe;
-			List<Integer> cuentaper = jdbcTemplate.queryForList(sql, Integer.class); 
-			Integer valorper = (Integer) cuentaper.get(0);		
-			lineaModel.setAbajoPersonLegajo(valorper.toString());
-			
-			// campo arituclo , - delito , ojo null
-			String sql2 ="Select DISTINCT CONCAT(md.nombre,' ', IFNULL(md.titulo, ''))  from mes_expedientes_delitos med\r\n"
-					+ "inner join mes_delitos md on med.idmes_delitos = md.idmes_delitos  \r\n"
-					+ "where idmes_expedientes = " + idmesexpe;
-			//List<Integer> cuentaper = jdbcTemplate.queryForList(sql, Integer.class); 
-			List<String> lstDel = jdbcTemplate.queryForList(sql2,String.class);
-			String delito = "-";
-			for (int x=0; x < lstDel.size(); x++) {
-				delito = delito + " / " + lstDel.get(x);
-			}
-			if (delito.length()< 100) {
-				lineaModel.setAbajoTituloDelito(delito);
-			}else {
-				lineaModel.setAbajoTituloDelito(delito.substring(0, 100));
-			}
-			
-			/// >>>>>>>>>>>>>>>>>>>>>  SECUENTROS <zzecuentros   -.-.-.-.-.-.-.-.-
-			
-			String sql3 ="select COUNT(idmes_expedientes) from mes_expedientes_secuestro_automotor mesa \r\n"
-					+ "WHERE idmes_expedientes = " + idmesexpe + "\r\n"
-					+ "union all\r\n"
-					+ "select COUNT(idmes_expedientes) from mes_expedientes_secuestro_otro meso \r\n"
-					+ "WHERE idmes_expedientes = " + idmesexpe + "\r\n"
-					+ "union all \r\n"
-					+ "select COUNT(idmes_expedientes) from mes_expedientes_secuestro_dinero mesd  \r\n"
-					+ "WHERE idmes_expedientes = " + idmesexpe + "\r\n"
-					+ "union all \r\n"
-					+ "select COUNT(idmes_expedientes) from mes_expedientes_secuestro_arma mesa2   \r\n"
-					+ "WHERE idmes_expedientes = " + idmesexpe;
-			
-			List<Integer> cuentadelitos = jdbcTemplate.queryForList(sql3, Integer.class);
-			Integer sumade =  cuentadelitos.stream().mapToInt(Integer::intValue).sum();
-			lineaModel.setAbajoSecuestros(sumade.toString());
-			
-			//  <<<<<<<<<<<<<< fin seucuetros <<<<<<<<<<<<<<
-			
-			
-			lstModel.add(lineaModel);
-			
+					int indice = todoResul1.toUpperCase().indexOf(finalCriteria.toUpperCase());
+	
+					if (todoResul1.length() < 300) {
+						if (indice > 200) {
+							todoResul1 = todoResul1.substring(indice - 100, todoResul1.length());
+						}else if (indice < 100) {
+							todoResul1 = todoResul1.substring(0 , indice +100);
+						}else {
+							todoResul1 = todoResul1.substring(indice - 100 , todoResul1.length());
+						}
+					}else {
+						if (indice < 100) {
+							todoResul1 = todoResul1.substring(0 , indice +100);	
+						} else if ((indice + 100) < todoResul1.length()) {
+							todoResul1 = todoResul1.substring(indice - 100 , indice +100);
+						} else {
+							todoResul1 = todoResul1.substring(indice - 100 , todoResul1.length());
+						}
+					}		
+				}
+				lineaModel.setTextoMedio(todoResul1);
+				
+				// otros arametro remitido a juicio
+				lineaModel.setAbajoRJ("SI");
+				lineaModel.setFecha1(hasFecha.get(linea));
+				lineaModel.setAbajoPreventivo("1");
+				
+				// completo datos de la lista con accesso a la db 
+				// CAMPO PERSONAS partes de mes expe personas
+				String sql ="SELECT COUNT(idmes_expedientes_personas) \r\n"
+						+ "FROM mes_expedientes_personas mep \r\n"
+						+ "WHERE idmes_expedientes =" + idmesexpe;
+				List<Integer> cuentaper = jdbcTemplate.queryForList(sql, Integer.class); 
+				Integer valorper = (Integer) cuentaper.get(0);		
+				lineaModel.setAbajoPersonLegajo(valorper.toString());
+				
+				// campo arituclo , - delito , ojo null
+				String sql2 ="Select DISTINCT CONCAT(md.nombre,' ', IFNULL(md.titulo, ''))  from mes_expedientes_delitos med\r\n"
+						+ "inner join mes_delitos md on med.idmes_delitos = md.idmes_delitos  \r\n"
+						+ "where idmes_expedientes = " + idmesexpe;
+				//List<Integer> cuentaper = jdbcTemplate.queryForList(sql, Integer.class); 
+				List<String> lstDel = jdbcTemplate.queryForList(sql2,String.class);
+				String delito = "-";
+				for (int x=0; x < lstDel.size(); x++) {
+					delito = delito + " / " + lstDel.get(x);
+				}
+				if (delito.length()< 100) {
+					lineaModel.setAbajoTituloDelito(delito);
+				}else {
+					lineaModel.setAbajoTituloDelito(delito.substring(0, 100));
+				}
+				
+				/// >>>>>>>>>>>>>>>>>>>>>  SECUENTROS <zzecuentros   -.-.-.-.-.-.-.-.-
+				
+				String sql3 ="select COUNT(idmes_expedientes) from mes_expedientes_secuestro_automotor mesa \r\n"
+						+ "WHERE idmes_expedientes = " + idmesexpe + "\r\n"
+						+ "union all\r\n"
+						+ "select COUNT(idmes_expedientes) from mes_expedientes_secuestro_otro meso \r\n"
+						+ "WHERE idmes_expedientes = " + idmesexpe + "\r\n"
+						+ "union all \r\n"
+						+ "select COUNT(idmes_expedientes) from mes_expedientes_secuestro_dinero mesd  \r\n"
+						+ "WHERE idmes_expedientes = " + idmesexpe + "\r\n"
+						+ "union all \r\n"
+						+ "select COUNT(idmes_expedientes) from mes_expedientes_secuestro_arma mesa2   \r\n"
+						+ "WHERE idmes_expedientes = " + idmesexpe;
+				
+				List<Integer> cuentadelitos = jdbcTemplate.queryForList(sql3, Integer.class);
+				Integer sumade =  cuentadelitos.stream().mapToInt(Integer::intValue).sum();
+				lineaModel.setAbajoSecuestros(sumade.toString());
+				
+				//  <<<<<<<<<<<<<< fin seucuetros <<<<<<<<<<<<<<
+				
+				
+				lstModel.add(lineaModel);
+			} // del try , si encontro el id mes expe
+		catch (DataAccessException e) {
+			System.out.println("se hace referencia a un id mes expediente que no existe " + idmesexpe);
+		}
 		});
 	} // del if de tipo busqueda	
 	
