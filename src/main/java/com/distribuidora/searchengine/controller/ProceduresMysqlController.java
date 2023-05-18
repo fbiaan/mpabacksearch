@@ -148,7 +148,8 @@ public class ProceduresMysqlController {
 		
 		//  analisis de param1 
 		System.out.println(param1);
-		
+		param1 = param1.trim();
+		System.out.println(param1);
 		// trabjamos el llamado del front 
 		// ejemlo +%22actuaciones%20informativas%22%20fernando%20ariel%20palacios
 
